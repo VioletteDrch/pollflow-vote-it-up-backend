@@ -1,10 +1,11 @@
 from fastapi import APIRouter, HTTPException, logger
-from api.models.polls import Poll, PollOption, PollAnswer
+from api.models.polls import Poll, PollOption, PollAnswer, QuestionType
 from typing import List
 from uuid import uuid4
 from datetime import datetime, UTC
 import logging
 from db.storage import polls
+from llm.summary_logic import summary_logic
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +30,7 @@ def create_poll(data: dict):
     new_poll = Poll(
         id=poll_id,
         question=data["question"],
+        questionType=QuestionType.THOUGHT,
         options=[PollOption(id=str(uuid4()), text=opt) for opt in data["options"]],
         isTextBased=data.get("isTextBased", False),
         createdAt=datetime.now(UTC)
@@ -61,3 +63,20 @@ def submit_answer(poll_id: str, answer_data: dict):
     )
     poll.answers.append(new_answer)
     return poll
+
+@router.post("/{poll_id}/analyze", response_model=dict)
+def analyze_poll_opinions(poll_id: str):
+    poll = polls.get(poll_id)
+    if not poll:
+        raise HTTPException(status_code=404, detail="Poll not found")
+    
+    if not poll.answers:
+        raise HTTPException(status_code=400, detail="No answers found for this poll")
+    
+    # Extract answer texts for analysis
+    answer_texts = [answer.text for answer in poll.answers]
+    
+    # Generate analysis using the summary logic
+    analysis = summary_logic(poll.question, answer_texts) # TODO: change to analysis_logic
+    
+    return {"analysis": analysis}

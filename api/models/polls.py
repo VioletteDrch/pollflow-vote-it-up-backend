@@ -1,3 +1,4 @@
+from enum import Enum
 from pydantic import BaseModel
 from typing import List
 from datetime import datetime
@@ -13,9 +14,14 @@ class PollAnswer(BaseModel):
     text: str
     createdAt: datetime
 
+class QuestionType(str, Enum):
+    THOUGHT = "thought" # open-ended, user describes their thoughts on a topic
+    STANCE = "stance" # close-ended, user takes a side on a topic
+
 class Poll(BaseModel):
     id: str
     question: str
+    questionType: QuestionType
     options: List[PollOption]
     answers: List[PollAnswer] = []
     isTextBased: bool = False
