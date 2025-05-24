@@ -1,10 +1,11 @@
 from llm.client import client
+from llm.models import LLModels
 
 
 def chat_logic(question: str, message: str):
     prompt = f"You are discussing the topic: {question}. The user said: {message}. Respond as an insightful assistant helping refine their opinion."
     completion = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model=LLModels.GPT_4o_MINI,
         messages=[
             {"role": "system", "content": "You are a thoughtful assistant helping users clarify and expand their opinions."},
             {"role": "user", "content": prompt},

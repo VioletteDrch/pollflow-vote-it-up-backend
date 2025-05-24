@@ -1,4 +1,5 @@
 from llm.client import client
+from llm.models import LLModels
 
 
 def summary_logic(question: str, messages: list[str]):
@@ -8,7 +9,7 @@ def summary_logic(question: str, messages: list[str]):
 Please write a short, clear summary of the user’s perspective based on this discussion."""
     
     completion = client.chat.completions.create(
-        model="gpt-4",
+        model=LLModels.GPT_4o_MINI,
         messages=[
             {"role": "system", "content": "You summarize user opinions into constructive summaries."},
             {"role": "user", "content": prompt},
