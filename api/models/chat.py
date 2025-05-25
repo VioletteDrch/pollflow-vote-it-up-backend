@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
-from typing import Literal
+from typing import List, Literal
 
 class Message(BaseModel):
     id: str
@@ -11,6 +11,7 @@ class Message(BaseModel):
 class ChatRequest(BaseModel):
     question: str
     message: str
+    past_messages: List[Message]
 
 class ChatResponse(BaseModel):
     response: str

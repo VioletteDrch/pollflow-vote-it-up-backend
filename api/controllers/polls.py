@@ -6,7 +6,6 @@ from datetime import datetime, UTC
 import logging
 from db.storage import polls
 from llm import analysis_logic
-from llm.summary_logic import summary_logic
 
 logger = logging.getLogger(__name__)
 
