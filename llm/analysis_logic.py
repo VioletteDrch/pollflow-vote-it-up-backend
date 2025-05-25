@@ -1,12 +1,43 @@
+'''
+- Theme clustering.
+- 2D or 3D visualisation. 
+- Statistics.
+- Community Detection. 
+- Graph.
+
+'''
+
 from llm.client import client
 from llm.models import LLModels
 
+def format_opinions(opinions: list[str]):
+    formatted_opinions = [
+        f"OPINION : {opinion}"
+        for opinion in opinions
+    ]
+    return "\n".join(formatted_opinions)
 
-def analysis_logic(question: str, messages: list[str]):
-    full_convo = " ** ".join(messages)
-    prompt = f"""You are an assistant helping summarize opinions on: "{question}". Here are all the opinions on the subject :
-{full_convo}. Each opinion is separated from the following with this sign ' ** '. Please write a short, clear summary on the diverse opinions regarding the question. Every idea should be conveyed in the final result.
-Please write a short, clear summary of the user’s perspective based on this discussion."""
+
+def analysis_logic(question: str, opinions: list[str]):
+    opinions_list = format_opinions(opinions)
+
+    prompt = f"""
+        You are an assistant tasked with summarizing the key points of view shared by users regarding the question: "{question}".
+
+        Below is a collection of user-written opinions, expressed in their own words:
+        {opinions_list}
+
+        Please write a concise and well-structured report that includes:
+        1. The main perspectives and arguments users shared.
+        2. How users agree or disagree with each other, if applicable.
+        3. A diversity of viewpoints, avoiding repetition.
+        4. A tone that feels natural and human (avoid generic or robotic phrasing).
+
+        The goal is to provide a short, readable document that captures what people think about the question, without sounding too analytical or too vague.
+
+        Begin your report directly. Do not introduce yourself or explain what you're doing.
+    """
+
     
     completion = client.chat.completions.create(
         model=LLModels.GPT_4o_MINI,
