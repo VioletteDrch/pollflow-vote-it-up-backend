@@ -2,13 +2,7 @@ from typing import List
 from api.models.chat import Message
 from llm.client import client
 from llm.models import LLModels
-
-def format_chat_history(chat_history: List[Message]):
-    messages = [
-        f"{m.sender.upper()} : {m.content}"
-        for m in chat_history
-    ]
-    return "\n".join(messages)
+from llm.utils import format_chat_history
 
 
 def chat_logic(question: str, message: str, chat_history: List[Message]):

@@ -15,5 +15,5 @@ async def chat_respond(req: ChatRequest):
 
 @router.post("/summary", response_model=SummaryResponse)
 async def chat_summary(req: SummaryRequest):
-    summary = summary_logic(req.question, [m.content for m in req.messages])
+    summary = summary_logic(req.question, req.messages)
     return SummaryResponse(summary=summary)

@@ -5,7 +5,7 @@ from uuid import uuid4
 from datetime import datetime, UTC
 import logging
 from db.storage import polls
-from llm import analysis_logic
+from llm.analysis_logic import analysis_logic
 
 logger = logging.getLogger(__name__)
 
@@ -76,7 +76,7 @@ def analyze_poll_opinions(poll_id: str):
     # Extract answer texts for analysis
     answer_texts = [answer.text for answer in poll.answers]
     
-    # Generate analysis using the summary logic
+    # Generate analysis 
     analysis = analysis_logic(poll.question, answer_texts) 
     
     return {"analysis": analysis}
